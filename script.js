@@ -2,14 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Preloader y Entrada Cinemática ---
     const preloader = document.getElementById('preloader');
 
+    const hidePreloader = () => {
+        if (preloader && !preloader.classList.contains('fade-out')) {
+            preloader.classList.add('fade-out');
+            document.body.classList.add('loaded');
+        }
+    };
+
     window.addEventListener('load', () => {
-        setTimeout(() => {
-            if (preloader) {
-                preloader.classList.add('fade-out');
-                document.body.classList.add('loaded');
-            }
-        }, 2000); // 2 segundos de impacto visual
+        const timeout = window.innerWidth < 768 ? 400 : 1000;
+        setTimeout(hidePreloader, timeout);
     });
+
+    // Fallback de seguridad (3 segundos)
+    setTimeout(hidePreloader, 3000);
 
     // Elementos del DOM
     const burger = document.getElementById('burger');

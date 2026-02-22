@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Preloader y Entrada Cinemática ---
+    const preloader = document.getElementById('preloader');
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if (preloader) {
+                preloader.classList.add('fade-out');
+                document.body.classList.add('loaded');
+            }
+        }, 2000); // 2 segundos de impacto visual
+    });
+
     // Elementos del DOM
     const burger = document.getElementById('burger');
     const navLinks = document.getElementById('navLinks');
@@ -53,35 +65,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- MOVIMIENTO DEL DRON ---
-    function moveDrone() {
-        if (!drone || !parallaxSection) return;
-
+    // --- EFECTOS DE SCROLL AVANZADOS ---
+    function handleScrollEffects() {
         const scrollY = window.scrollY;
-        const sectionTop = parallaxSection.offsetTop;
-        const sectionHeight = parallaxSection.offsetHeight;
         const viewportHeight = window.innerHeight;
 
-        const sectionVisibleStart = sectionTop - viewportHeight;
-        const sectionVisibleEnd = sectionTop + sectionHeight;
-        let progress = (scrollY - sectionVisibleStart) / (sectionVisibleEnd - sectionVisibleStart);
-        progress = Math.min(1, Math.max(0, progress));
+        // 1. Movimiento del Dron Parallax
+        if (drone && parallaxSection) {
+            const sectionTop = parallaxSection.offsetTop;
+            const sectionHeight = parallaxSection.offsetHeight;
+            const sectionVisibleStart = sectionTop - viewportHeight;
+            const sectionVisibleEnd = sectionTop + sectionHeight;
 
-        const leftPosition = -20 + progress * 140;
-        drone.style.left = leftPosition + '%';
+            let progress = (scrollY - sectionVisibleStart) / (sectionVisibleEnd - sectionVisibleStart);
+            progress = Math.min(1, Math.max(0, progress));
+
+            const leftPosition = -20 + progress * 140;
+            const rotation = (progress - 0.5) * 40; // Rotación según dirección
+            const lift = Math.sin(progress * Math.PI) * 50; // Elevación curva
+
+            drone.style.left = leftPosition + '%';
+            drone.style.transform = `rotate(${rotation}deg) translateY(-${lift}px)`;
+        }
+
+        // 2. Efectos de revelado de elementos internos
+        sections.forEach(section => {
+            if (section.classList.contains('visible')) {
+                const rect = section.getBoundingClientRect();
+                const progress = 1 - (rect.bottom / (viewportHeight + rect.height));
+
+                // Aplicar parallax suave a los títulos o imágenes internas si existen
+                const title = section.querySelector('.section-title');
+                if (title) {
+                    title.style.transform = `translateY(${progress * 20}px)`;
+                }
+            }
+        });
     }
 
-    window.addEventListener('scroll', moveDrone);
-    moveDrone();
+    window.addEventListener('scroll', () => {
+        requestAnimationFrame(handleScrollEffects);
+    });
+    handleScrollEffects();
 
-    // --- Animación de entrada para secciones (fade-in) ---
+    // --- Animación de entrada para secciones mejorada ---
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+            } else {
+                // Opcional: quitar para que solo se anime una vez
+                // entry.target.classList.remove('visible');
             }
         });
-    }, { threshold: 0.2 });
+    }, observerOptions);
 
     sections.forEach(section => observer.observe(section));
 
@@ -114,9 +156,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Barra de progreso de lectura ---
+    const progressBar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+    });
+
+    // --- FAQ Accordion ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            // Cerrar otros
+            faqItems.forEach(i => i.classList.remove('active'));
+
+            // Si no estaba activo, abrirlo
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
     // Reproducir hero video si es posible
     if (heroVideo) {
-        heroVideo.play().catch(() => {});
+        heroVideo.play().catch(() => { });
     }
 });
 

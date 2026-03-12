@@ -1,7 +1,8 @@
 :root {
-    --primary: #00d2ff;
-    --primary-glow: rgba(0, 210, 255, 0.4);
-    --dark: #070707;
+    /* brand colors */
+    --primary: #F9A11B; /* naranja vibrante */
+    --primary-glow: rgba(249, 161, 27, 0.4);
+    --dark: #000000;
     --gray: #121212;
     --card-bg: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.1);
@@ -18,7 +19,8 @@
     left: 0;
     width: 0%;
     height: 4px;
-    background: linear-gradient(to right, var(--primary), #00ffcc);
+    /* gradient using primary and a softer orange for progress effect */
+    background: linear-gradient(to right, var(--primary), #FFD28A);
     z-index: 1001;
     transition: width 0.1s ease-out;
 }
@@ -209,12 +211,25 @@ body::before {
 }
 
 .logo {
+    /* container for the logo image */
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+    /* removed border and padding as requested */
+}
+
+/* old text-based logo rules kept for fallback if needed */
+.logo-text {
     font-size: 1.8rem;
     font-weight: 800;
     letter-spacing: 1px;
 }
 
-.logo span {
+.logo-text span {
     color: var(--primary);
     margin-left: 5px;
     font-weight: 600;
@@ -343,7 +358,7 @@ body::before {
     color: var(--primary);
     border-color: var(--primary);
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 210, 255, 0.3);
+    box-shadow: 0 10px 25px rgba(249, 161, 27, 0.3);
 }
 
 /* ----- Secciones generales ----- */
@@ -416,7 +431,7 @@ body::before {
 .card:hover {
     transform: translateY(-15px) scale(1.02);
     border-color: var(--primary);
-    box-shadow: 0 20px 30px rgba(0, 210, 255, 0.2);
+    box-shadow: 0 20px 30px rgba(249, 161, 27, 0.2);
 }
 
 .card i {
@@ -453,7 +468,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(0, 210, 255, 0.1), transparent);
+    background: linear-gradient(135deg, transparent, rgba(249, 161, 27, 0.1), transparent);
     transform: translateX(-100%);
     transition: transform 0.6s ease;
 }
@@ -465,19 +480,19 @@ body::before {
 .price-card:hover {
     transform: translateY(-10px) scale(1.02);
     border-color: var(--primary);
-    box-shadow: 0 20px 30px rgba(0, 210, 255, 0.3);
+    box-shadow: 0 20px 30px rgba(249, 161, 27, 0.3);
 }
 
 .price-card.featured {
     background: linear-gradient(145deg, #1e2a3a, #0f1a2a);
     border: 2px solid var(--primary);
     transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+    box-shadow: 0 0 30px rgba(249, 161, 27, 0.3);
 }
 
 .price-card.featured:hover {
     transform: scale(1.07) translateY(-10px);
-    box-shadow: 0 0 40px rgba(0, 210, 255, 0.5);
+    box-shadow: 0 0 40px rgba(249, 161, 27, 0.5);
 }
 
 .price {
@@ -485,7 +500,7 @@ body::before {
     font-weight: 800;
     color: var(--primary);
     margin: 20px 0;
-    text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+    text-shadow: 0 0 10px rgba(249, 161, 27, 0.5);
 }
 
 .price span {
@@ -655,7 +670,7 @@ body::before {
 
 .gallery-item:hover {
     transform: scale(1.02) translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 210, 255, 0.3);
+    box-shadow: 0 15px 30px rgba(249, 161, 27, 0.3);
 }
 
 .gallery-item img,
